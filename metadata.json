@@ -1,0 +1,7 @@
+{
+  "name": "Krati AI",
+  "description": "Krati is a next-generation AI assistant featuring a futuristic interface, multimodal capabilities, and advanced reasoning.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
