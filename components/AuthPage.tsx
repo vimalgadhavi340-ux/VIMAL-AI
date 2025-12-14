@@ -21,15 +21,15 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-[#020617]">
+    <div className="min-h-screen supports-[min-height:100dvh]:min-h-[100dvh] w-full flex items-center justify-center relative overflow-hidden bg-[#020617] p-4">
       {/* Background Ambience */}
       <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[120px]" />
       <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-purple-500/10 blur-[120px]" />
 
-      <div className="w-full max-w-md z-10 p-6">
+      <div className="w-full max-w-md z-10 flex flex-col justify-center">
         
         {/* Logo Section */}
-        <div className="flex flex-col items-center mb-10">
+        <div className="flex flex-col items-center mb-8 md:mb-10">
             <div className="relative mb-6 flex items-center justify-center">
                 {/* Orbital Rings Effect behind Logo */}
                 <div className="absolute inset-[-10px] border border-cyan-500/20 rounded-full animate-[spin_10s_linear_infinite]" />
@@ -39,14 +39,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
                     <Logo size={100} animated />
                 </div>
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-200 via-white to-purple-200 bg-clip-text text-transparent brand-font tracking-tight">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-200 via-white to-purple-200 bg-clip-text text-transparent brand-font tracking-tight text-center">
                 KRATI
             </h1>
-            <p className="text-slate-400 mt-2 text-sm">Intelligence Reimagined</p>
+            <p className="text-slate-400 mt-2 text-sm text-center">Intelligence Reimagined</p>
         </div>
 
         {/* Card */}
-        <div className="glass p-8 rounded-2xl border border-slate-700/50 shadow-2xl backdrop-blur-xl">
+        <div className="glass p-6 md:p-8 rounded-2xl border border-slate-700/50 shadow-2xl backdrop-blur-xl">
             <div className="flex gap-4 mb-8 border-b border-slate-700/50 pb-1">
                 <button 
                     onClick={() => setIsLogin(true)}

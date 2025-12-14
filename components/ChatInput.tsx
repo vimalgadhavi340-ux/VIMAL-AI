@@ -122,11 +122,11 @@ export const ChatInput: React.FC<ChatInputProps> = ({
             </div>
         )}
 
-        <div className="flex items-end gap-2">
-            <div className="flex items-center gap-1 pb-1.5 pl-1">
+        <div className="flex items-end gap-1 md:gap-2">
+            <div className="flex items-center gap-0 md:gap-1 pb-1.5 pl-1">
                 <button 
                     onClick={() => fileInputRef.current?.click()}
-                    className="p-2.5 text-slate-400 hover:text-cyan-400 hover:bg-slate-800/50 rounded-xl transition-colors"
+                    className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-slate-800/50 rounded-xl transition-colors"
                     title="Attach image"
                 >
                     <Paperclip size={20} />
@@ -141,7 +141,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
 
                 <button
                     onClick={onToggleSearch}
-                    className={`p-2.5 rounded-xl transition-colors ${enableSearch ? 'text-blue-400 bg-blue-500/10' : 'text-slate-400 hover:text-blue-400 hover:bg-slate-800/50'}`}
+                    className={`p-2 rounded-xl transition-colors ${enableSearch ? 'text-blue-400 bg-blue-500/10' : 'text-slate-400 hover:text-blue-400 hover:bg-slate-800/50'}`}
                     title="Toggle Web Search"
                 >
                     <Search size={20} />
@@ -155,14 +155,14 @@ export const ChatInput: React.FC<ChatInputProps> = ({
                 onKeyDown={handleKeyDown}
                 placeholder={isListening ? "Listening..." : "Ask Krati anything..."}
                 rows={1}
-                className="flex-1 bg-transparent text-slate-100 placeholder-slate-500 focus:outline-none resize-none py-3.5 px-2 max-h-[200px] overflow-y-auto leading-relaxed"
-                style={{ minHeight: '52px' }}
+                className="flex-1 bg-transparent text-slate-100 placeholder-slate-500 focus:outline-none resize-none py-3 px-2 max-h-[150px] md:max-h-[200px] overflow-y-auto leading-relaxed text-base"
+                style={{ minHeight: '48px' }}
             />
 
-            <div className="flex items-center gap-2 mb-1.5 pr-1.5">
+            <div className="flex items-center gap-1 md:gap-2 mb-1.5 pr-1">
                  <button 
                     onClick={toggleListening}
-                    className={`p-2.5 rounded-xl transition-colors ${isListening ? 'text-red-400 bg-red-500/10 animate-pulse' : 'text-slate-400 hover:text-white hover:bg-slate-800/50'}`}
+                    className={`p-2 rounded-xl transition-colors ${isListening ? 'text-red-400 bg-red-500/10 animate-pulse' : 'text-slate-400 hover:text-white hover:bg-slate-800/50'}`}
                 >
                     {isListening ? <MicOff size={20} /> : <Mic size={20} />}
                 </button>
@@ -170,10 +170,10 @@ export const ChatInput: React.FC<ChatInputProps> = ({
                 <button
                     onClick={onSend}
                     disabled={(!value.trim() && !attachedImage) || isLoading}
-                    className={`p-2.5 rounded-xl transition-all duration-300 shadow-lg ${
+                    className={`p-2 rounded-xl transition-all duration-300 shadow-lg ${
                         (!value.trim() && !attachedImage) || isLoading 
                         ? 'bg-slate-800 text-slate-600 cursor-not-allowed' 
-                        : 'bg-gradient-to-tr from-cyan-500 to-blue-600 text-white hover:shadow-cyan-500/25 hover:scale-105'
+                        : 'bg-gradient-to-tr from-cyan-500 to-blue-600 text-white hover:shadow-cyan-500/25 hover:scale-105 active:scale-95'
                     }`}
                 >
                     {isLoading ? <Sparkles size={20} className="animate-spin" /> : <ArrowUp size={20} strokeWidth={3} />}

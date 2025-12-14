@@ -22,7 +22,12 @@ const App: React.FC = () => {
   
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  
+  // Initialize sidebar closed on mobile
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => 
+    typeof window !== 'undefined' ? window.innerWidth >= 768 : false
+  );
+
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isPromptGuideOpen, setIsPromptGuideOpen] = useState(false);
   
@@ -49,6 +54,19 @@ const App: React.FC = () => {
     const saved = getSavedSessions();
     setChatSessions(saved);
   }, []);
+
+  // Handle Resize to auto-show/hide sidebar
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+         if (!isSidebarOpen) setIsSidebarOpen(true);
+      } else {
+         if (isSidebarOpen) setIsSidebarOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []); // Intentionally empty deps to just set up listener
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -204,18 +222,6 @@ const App: React.FC = () => {
 
   const handleQuickStart = (text: string) => {
       setInput(text);
-      // Optional: immediately send
-      // handleSendMessage(); 
-      // But usually user wants to edit quick start text, so just setting it is safer.
-      // If immediate send is preferred:
-      /* 
-         const fakeEvent = { preventDefault: () => {} } as any;
-         setInput(text);
-         setTimeout(() => {
-             // We need to actually trigger send logic, but React state updates are async.
-             // Simplest is to just set input and let user press send for control.
-         }, 100);
-      */
   };
 
   const startNewChat = () => {
@@ -260,7 +266,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden text-slate-200 selection:bg-cyan-500/30">
+    <div className="flex h-screen w-full overflow-hidden text-slate-200 selection:bg-cyan-500/30 supports-[height:100dvh]:h-[100dvh]">
       
       <SettingsModal 
         isOpen={isSettingsOpen}
@@ -287,6 +293,7 @@ const App: React.FC = () => {
         fixed inset-y-0 left-0 z-30 w-[280px] transform transition-transform duration-300 ease-in-out
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         md:relative md:translate-x-0
+        shadow-2xl md:shadow-none
       `}>
         <Sidebar 
             onNewChat={startNewChat} 
@@ -301,27 +308,27 @@ const App: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col h-full relative w-full">
+      <div className="flex-1 flex flex-col h-full relative w-full min-w-0">
         {/* Header */}
-        <header className="h-16 flex items-center justify-between px-4 md:px-6 shrink-0 z-10 sticky top-0 bg-opacity-80 backdrop-blur-md">
-          <div className="flex items-center gap-2">
+        <header className="h-16 shrink-0 flex items-center justify-between px-4 md:px-6 z-10 sticky top-0 bg-[#0f172a]/80 backdrop-blur-md border-b border-white/5">
+          <div className="flex items-center gap-3">
             <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="md:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg"
+              className="md:hidden p-2 -ml-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg active:scale-95 transition-transform"
             >
-              <Menu size={20} />
+              <Menu size={24} />
             </button>
 
             {/* Model Selector Dropdown */}
             <div className="relative">
                 <button 
                     onClick={() => setIsModelMenuOpen(!isModelMenuOpen)}
-                    className="flex items-center gap-2 px-3 py-1.5 text-lg font-bold text-slate-100 hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50 brand-font tracking-wide"
+                    className="flex items-center gap-2 px-2 py-1.5 text-lg font-bold text-slate-100 hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50 brand-font tracking-wide"
                 >
-                    <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent truncate max-w-[150px] md:max-w-none">
                         {getModelDisplayName(selectedModel)}
                     </span>
-                    <ChevronDown size={16} className="text-slate-500" />
+                    <ChevronDown size={16} className="text-slate-500 flex-shrink-0" />
                 </button>
                 
                 {isModelMenuOpen && (
@@ -358,9 +365,9 @@ const App: React.FC = () => {
           
           <button
                 onClick={startNewChat}
-                className="md:hidden p-2 text-slate-400 hover:text-white"
+                className="md:hidden p-2 -mr-2 text-slate-400 hover:text-white active:scale-95 transition-transform"
              >
-                <MessageSquarePlus size={20} />
+                <MessageSquarePlus size={24} />
           </button>
         </header>
 
@@ -376,7 +383,7 @@ const App: React.FC = () => {
         />
 
         {/* Input Area */}
-        <div className="p-4 md:p-6 w-full z-10">
+        <div className="shrink-0 p-3 md:p-6 w-full z-10 bg-gradient-to-t from-[#020617] via-[#020617] to-transparent">
           <div className="max-w-3xl mx-auto w-full">
              <ChatInput 
                 value={input}
@@ -389,7 +396,7 @@ const App: React.FC = () => {
                 onAttachImage={setAttachedImage}
                 onRemoveImage={() => setAttachedImage(null)}
              />
-             <div className="text-center text-[10px] md:text-xs text-slate-500 mt-3 pb-1">
+             <div className="text-center text-[10px] md:text-xs text-slate-500 mt-3 pb-safe-bottom">
                 Krati AI can make mistakes. Verify important information.
              </div>
           </div>

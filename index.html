@@ -23,6 +23,11 @@
         font-family: 'JetBrains Mono', monospace;
       }
       
+      /* Mobile optimization */
+      * {
+        -webkit-tap-highlight-color: transparent;
+      }
+      
       /* Glassmorphism Utilities */
       .glass {
         background: rgba(30, 41, 59, 0.7);
@@ -65,6 +70,10 @@
       }
       ::-webkit-scrollbar-thumb:hover {
         background: rgba(148, 163, 184, 0.4);
+      }
+      
+      .custom-scrollbar {
+          -webkit-overflow-scrolling: touch;
       }
     </style>
   <script type="importmap">
