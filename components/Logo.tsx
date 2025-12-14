@@ -62,17 +62,6 @@ export const Logo: React.FC<LogoProps> = ({ className = "", size = 40, animated 
         <circle cx="65" cy="28" r="3" fill="#22d3ee" />
         <circle cx="65" cy="72" r="3" fill="#a855f7" />
         <circle cx="35" cy="50" r="4" fill="white" />
-        
-        {/* Animated Orbiting Dot */}
-        {animated && (
-             <circle r="3" fill="white" className="animate-[spin_4s_linear_infinite]" style={{ transformOrigin: 'center' }}>
-                <animateMotion 
-                    dur="4s" 
-                    repeatCount="indefinite"
-                    path="M50 5 L90 27.5 L90 72.5 L50 95 L10 72.5 L10 27.5 Z" 
-                />
-             </circle>
-        )}
       </svg>
     </div>
   );

@@ -23,7 +23,7 @@ const App: React.FC = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
-  // Initialize sidebar closed on mobile
+  // Initialize sidebar closed on mobile, open on desktop
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => 
     typeof window !== 'undefined' ? window.innerWidth >= 768 : false
   );
@@ -58,15 +58,17 @@ const App: React.FC = () => {
   // Handle Resize to auto-show/hide sidebar
   useEffect(() => {
     const handleResize = () => {
+      // If screen becomes wide (desktop), ensure sidebar is visible
       if (window.innerWidth >= 768) {
-         if (!isSidebarOpen) setIsSidebarOpen(true);
-      } else {
-         if (isSidebarOpen) setIsSidebarOpen(false);
-      }
+         setIsSidebarOpen(true);
+      } 
+      // We do not auto-close when shrinking to prevent jarring UX,
+      // the CSS media queries handle the 'fixed' vs 'relative' positioning transition.
     };
+    
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []); // Intentionally empty deps to just set up listener
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -99,6 +101,13 @@ const App: React.FC = () => {
       });
     }
   }, [messages, currentChatId]);
+
+  // Helper to close sidebar on mobile only
+  const closeSidebarOnMobile = () => {
+    if (window.innerWidth < 768) {
+      setIsSidebarOpen(false);
+    }
+  };
 
   const handleSendMessage = async () => {
     if ((!input.trim() && !attachedImage) || isLoading) return;
@@ -229,9 +238,7 @@ const App: React.FC = () => {
     setCurrentChatId(null);
     setInput('');
     setAttachedImage(null);
-    if (window.innerWidth < 768) {
-        setIsSidebarOpen(false);
-    }
+    closeSidebarOnMobile();
   };
 
   const loadChat = (id: string) => {
@@ -239,9 +246,7 @@ const App: React.FC = () => {
     if (session) {
         setMessages(session.messages);
         setCurrentChatId(session.id);
-        if (window.innerWidth < 768) {
-            setIsSidebarOpen(false);
-        }
+        closeSidebarOnMobile();
     }
   };
 
@@ -304,6 +309,7 @@ const App: React.FC = () => {
             currentChatId={currentChatId}
             onSelectChat={loadChat}
             onDeleteChat={deleteChat}
+            onCloseMobile={closeSidebarOnMobile}
         />
       </div>
 

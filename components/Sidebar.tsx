@@ -12,6 +12,7 @@ interface SidebarProps {
   currentChatId: string | null;
   onSelectChat: (id: string) => void;
   onDeleteChat: (id: string, e: React.MouseEvent) => void;
+  onCloseMobile?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ 
@@ -22,9 +23,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
   sessions, 
   currentChatId, 
   onSelectChat,
-  onDeleteChat
+  onDeleteChat,
+  onCloseMobile
 }) => {
   
+  const handleAction = (action: () => void) => {
+      action();
+      if (onCloseMobile) onCloseMobile();
+  };
+
   return (
     <div className="flex flex-col h-full glass-panel text-slate-300">
       {/* Brand Header */}
@@ -36,7 +43,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* New Chat Button */}
       <div className="px-4 mb-2">
         <button 
-          onClick={onNewChat}
+          onClick={() => handleAction(onNewChat)}
           className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-cyan-600/20 to-blue-600/20 hover:from-cyan-600/30 hover:to-blue-600/30 border border-cyan-500/30 text-cyan-100 rounded-xl transition-all duration-300 group shadow-[0_0_15px_rgba(8,145,178,0.1)]"
         >
           <MessageSquarePlus size={18} className="text-cyan-400 group-hover:scale-110 transition-transform" />
@@ -49,11 +56,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         
         {/* Main Nav */}
         <div className="space-y-1">
-            <button onClick={onOpenPromptGuide} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg transition-colors">
+            <button onClick={() => handleAction(onOpenPromptGuide)} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg transition-colors">
                 <LayoutGrid size={18} className="text-slate-500" />
                 <span>Templates</span>
             </button>
-            <button onClick={onOpenSettings} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg transition-colors">
+            <button onClick={() => handleAction(onOpenSettings)} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg transition-colors">
                 <Settings size={18} className="text-slate-500" />
                 <span>Settings</span>
             </button>
@@ -71,7 +78,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 {sessions.map((session) => (
                     <button 
                     key={session.id} 
-                    onClick={() => onSelectChat(session.id)}
+                    onClick={() => handleAction(() => onSelectChat(session.id))}
                     className={`w-full text-left px-3 py-2.5 text-sm rounded-lg transition-all truncate flex items-center gap-2 group relative border border-transparent
                         ${currentChatId === session.id 
                             ? 'bg-slate-800/80 text-cyan-200 border-slate-700/50 shadow-sm' 
